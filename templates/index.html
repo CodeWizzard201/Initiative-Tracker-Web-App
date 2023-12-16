@@ -25,12 +25,11 @@
 
 
         <div class="container">
-            <div class="row">
-                Filler content here
-            </div>
-            <div class="row">
-                Filler two electric boogaloo
-            </div>
+            {% for comment in comments %}
+                <div class="row">
+                    {{ comment }}
+                </div>
+            {% endfor %}
             <div class="row">
                 <form action="." method="POST">
                     <textarea name="contents" placeholder="Enter a name" class="form-control"></textarea>
