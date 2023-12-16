@@ -6,6 +6,7 @@
 from flask import Flask, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 
+comments = []
 app = Flask(__name__)
 app.config["DEBUG"] = True
 SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
@@ -21,6 +22,8 @@ db = SQLAlchemy(app)
 @app.route('/', methods=["GET", "POST"]) # Accepts whichever methods you list, so GET and POST in this case
 def index():
     if request.method == "GET":
-        return render_template ("index.html")
+        return render_template ("index.html", comments=comments)
+
+    comments.append(request.form["contents"])
     return redirect(url_for('index'))
 
