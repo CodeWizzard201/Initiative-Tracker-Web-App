@@ -9,8 +9,6 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config["DEBUG"] = True
 
-comments = []
-
 SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
     username="RedWizard",
     password="tM9MUfv8T3EMRYMBi*L4^DcstS",
@@ -33,8 +31,10 @@ class Comment(db.Model):
 @app.route('/', methods=["GET", "POST"]) # Accepts whichever methods you list, so GET and POST in this case
 def index():
     if request.method == "GET":
-        return render_template ("index.html", comments=comments)
+        return render_template ("index.html", comments=Comment.query.all())
 
-    comments.append(request.form["contents"])
+    comment = Comment(content=request.form["contents"])
+    db.session.add(comment)
+    db.session.commit()
     return redirect(url_for('index'))
 
