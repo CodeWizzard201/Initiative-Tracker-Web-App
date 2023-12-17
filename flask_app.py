@@ -2,23 +2,34 @@
 # Initiative Tracker Web App
 # By Gabe Williams
 # GitHub: CodeWizzard201
-# MYSQL pass: rAw&xn7U*$gJ@Lt4^SsMNJe33b
+
 from flask import Flask, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 
-comments = []
 app = Flask(__name__)
 app.config["DEBUG"] = True
+
+comments = []
+
 SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
     username="RedWizard",
-    password="rAw&xn7U*$gJ@Lt4^SsMNJe33b",
+    password="tM9MUfv8T3EMRYMBi*L4^DcstS",
     hostname="RedWizard.mysql.pythonanywhere-services.com",
     databasename="RedWizard$comments",
 )
 app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
 db = SQLAlchemy(app)
+
+class Comment(db.Model):
+
+    __tablename__ = "comments"
+
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String(4096))
+
 @app.route('/', methods=["GET", "POST"]) # Accepts whichever methods you list, so GET and POST in this case
 def index():
     if request.method == "GET":
