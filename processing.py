@@ -19,27 +19,6 @@ class Combatant:
         else:
             return ""
 
-    # Getters
-    def get_name(self):
-        return self.name
-
-    def get_mod(self):
-        return self.mod
-
-    def get_roll(self):
-        return self.roll
-
-
-    # Setters for editing
-    def set_name(self, value):
-        self.name = value
-
-    def set_mod(self, value):
-        self.mod = value
-
-    def set_roll(self, value):
-        self.roll = value
-
 def sort_combatants(array, descending, tiebreaker):
     if descending and tiebreaker:
         #Do descending sorting with tiebreaker

@@ -12,12 +12,6 @@
         <nav class="navbar navbar-dark bg-dark">
           <div class="container">
             <div class="navbar-header">
-              <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-              </button>
               <a class="navbar-brand" href="#">Initiative Tracker</a>
             </div>
           </div>
@@ -25,7 +19,12 @@
 
         <div class="container">
             <div class="row">
-                <form action="." method="POST">
+                {% for combatant in combatants %}
+                <div class="row">
+                    {{ combatant.name }} | {{ combatant.sign }}{{ combatant.mod }} | {{ combatant.roll }}
+                </div>
+                {% endfor %}
+                <form action="#" method="POST">
                     <label for="name">Name of Combatant:</label>
                     <input type="text" id="name" name="name">
                     <label for="modifier">Dex Modifier (Used for Tiebreakers):</label>
@@ -33,14 +32,11 @@
                     <label for="roll">Result of the Roll:</label>
                     <input type="number" id="roll" name="roll">
                     <input type="submit" class="btn btn-success" value="Submit Combatant">
-                    <input type="reset" value="Clear"
+                    <input type="reset" value="Clear">
                 </form>
+                {{ errors }}
             </div>
-            {% for combatant in combatants %}
-                <div class="row">
-                    {{ combatant.name }} | {{combatant.sign}}{{ combatant.mod }} | {{ combatant.roll }}
-                </div>
-            {% endfor %}
+
         </div>
 
     </body>
