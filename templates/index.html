@@ -20,19 +20,27 @@
         <div class="container">
             <div class="row">
                 {% for combatant in combatants %}
-                <div class="row">
-                    {{ combatant.name }} | {{ combatant.sign }}{{ combatant.mod }} | {{ combatant.roll }}
+                <div class="column">
+                    {{ combatant.name }} | {{ combatant.sign }}{{ combatant.mod }} | {{ combatant.roll }}<br>
                 </div>
                 {% endfor %}
                 <form action="#" method="POST">
+                    <div>
                     <label for="name">Name of Combatant:</label>
-                    <input type="text" id="name" name="name">
+                    <input type="text" id="name" name="name" required>
                     <label for="modifier">Dex Modifier (Used for Tiebreakers):</label>
-                    <input type="number" id="modifier" name="modifier">
+                    <input type="number" id="modifier" name="modifier" required>
                     <label for="roll">Result of the Roll:</label>
-                    <input type="number" id="roll" name="roll">
+                    <input type="number" id="roll" name="roll" required>
+                    <br>
+                    <label for="descend">Descending order?: </label>
+                    <input type="checkbox" id="descend" name="descend" value= "True" {{'checked' if descend else ''}}>
+                    <label for="tiebreaker">Use tiebreaker rule?: </label>
+                    <input type="checkbox" id="tiebreaker" name="tiebreaker" value="True" {{'checked' if tiebreaker else ''}}>
+                    </div>
                     <input type="submit" class="btn btn-success" value="Submit Combatant">
-                    <input type="reset" value="Clear">
+                    <button type="reset" class="btn btn-warning" value="Reset">Clear Inputs</button>
+                    <input type="submit" name="action" class="btn btn-danger" value="Clear Combatants">
                 </form>
                 {{ errors }}
             </div>

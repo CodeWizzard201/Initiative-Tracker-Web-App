@@ -19,6 +19,7 @@ class Combatant:
         else:
             return ""
 
+#Sorts depending on which two settings are selected on the page
 def sort_combatants(array, descending, tiebreaker):
     if descending and tiebreaker:
         #Do descending sorting with tiebreaker
