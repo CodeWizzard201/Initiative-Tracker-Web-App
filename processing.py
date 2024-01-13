@@ -6,6 +6,10 @@ class Combatant:
         self.name = name
         self.mod = mod
         self.roll = roll
+
+    def to_json(self):
+        return {"name": self.name, "mod": self.mod, "roll": self.name}
+
     # Calculates the Sign of the Number based on if it's positive or negative
     @property
     def sign(self):
