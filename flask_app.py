@@ -42,3 +42,6 @@ def index():
         session["combatants"] = json_combatants #Stores the current list of combatants
     sort_combatants(combatants, session.get("descend", False), session.get("tiebreaker", False))
     return render_template("index.html", errors=errors, combatants=combatants, descend=session.get("descend",False), tiebreaker=session.get("tiebreaker", False))
+
+@app.route('/delete', method == ["POST", "GET"])
+def delete():
