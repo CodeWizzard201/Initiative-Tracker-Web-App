@@ -5,7 +5,7 @@
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/custom.css') }}">
-
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
         <title>Initiative Tracker</title>
     </head>
 
@@ -23,27 +23,27 @@
             <table class="table">
                 <thead>
                 <tr>
-                    <th class="combatantId">#</th>
                     <th class="combatantName">Combatant Name</th>
                     <th class="combatantMod">Modifier</th>
                     <th class="combatantRoll">Initiative Roll</th>
-                    <th class="combatantEdit">Edit</th>
-                    <th class="combatantRemove">Remove</th>
+                    <th class="update">Remove</th>
+
                 </tr>
                 </thead>
 
                 <tbody>
                     {% for combatant in combatants %}
                         <tr>
-                            <td>{{combatants.index(combatant)}}</td>
                             <td>{{combatant.name}}</td>
                             <td>{{combatant.sign}}{{combatant.mod}}</td>
                             <td>{{combatant.roll}}</td>
-                            <td><button type="button" class="btn btn-outline-info btn-sm" data-bs-toggle="modal"
-							    data-bs-target="#combatant-modal" data-source="{{combatants.index(combatant)}}" data-content="{{combatant.name}}">
-                                <i class="fa fa-pen fa-1" aria-hidden="true"></i></button></td>
-                            <td><button class="btn btn-outline-secondary btn-sm remove" data-source="{{combatants.index(combatant)}}"
-                                type="button"><i class="fa fa-trash fa-1" aria-hidden="true"></i></button></td>
+
+                            <td><form action="/delete/{{combatant.id}}" method="POST">
+                                <input type="hidden" name=id value="{{combatant.id}}">
+                                <button class="btn btn-outline-secondary btn-sm remove"	type="submit">
+                                    <i class="bi bi-trash" aria-hidden="true"></i>
+                                </button>
+                            </form></td>
 
                         </tr>
                     {% endfor %}
@@ -66,7 +66,6 @@
                     </div>
                     <input type="submit" class="btn btn-success" value="Submit Combatant">
                     <button type="reset" class="btn btn-warning" value="Reset">Clear Inputs</button>
-                    <input type="submit" name="action" class="btn btn-danger" value="Clear Combatants">
                 </form>
                 {{ errors }}
             </div>
