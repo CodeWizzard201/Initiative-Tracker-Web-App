@@ -1,14 +1,16 @@
 from functools import lru_cache
+import uuid
 
 # Where the processing of the data takes place
 class Combatant:
     def __init__(self, name, mod, roll):
+        self.id = str(uuid.uuid4())
         self.name = name
         self.mod = mod
         self.roll = roll
 
     def to_json(self):
-        return {"name": self.name, "mod": self.mod, "roll": self.name}
+        return {"id": self.id, "name": self.name, "mod": self.mod, "roll": self.name}
 
     # Calculates the Sign of the Number based on if it's positive or negative
     @property

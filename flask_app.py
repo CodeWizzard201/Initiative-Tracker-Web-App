@@ -43,5 +43,18 @@ def index():
     sort_combatants(combatants, session.get("descend", False), session.get("tiebreaker", False))
     return render_template("index.html", errors=errors, combatants=combatants, descend=session.get("descend",False), tiebreaker=session.get("tiebreaker", False))
 
-@app.route('/delete', method == ["POST", "GET"])
-def delete():
+#@app.route('/delete/<uuid>', method == ["POST"])
+#def delete(uuid):
+     # Find the index of the combatant to delete using its UUID
+    #index_to_delete = None
+    #for i, combatant_data in enumerate(combatants):
+       # if combatant_data['id'] == uuid:
+           # index_to_delete = i
+           # break
+
+   # if index_to_delete is not None:
+      #  del combatants[index_to_delete]  # Delete the combatant from the list
+       # session['combatants'] = combatants  # Update the session
+
+    # Redirect to the main page or display a confirmation message
+  #  return redirect(url_for('index'))  # Example of redirection
