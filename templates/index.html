@@ -5,11 +5,13 @@
 
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <link rel="stylesheet" href="{{ url_for('static', filename='styles/custom.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='styles/modal.css') }}">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
         <title>Initiative Tracker</title>
     </head>
 
     <body>
+        <!-- Nav Bar-->
         <nav class="navbar navbar-dark bg-dark">
           <div class="container">
             <div class="navbar-header">
@@ -17,6 +19,36 @@
             </div>
           </div>
         </nav>
+
+        <!--Edit Modal-->
+        <div id="edit-modal" class="modal fade" tabindex="-1" aria-labelledby="edit-modal-label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="edit-modal-label">Edit Combatant</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="edit-combatant-form">
+                            <div class="mb-3">
+                                <label for="edit-name" class="form-label">Name:</label>
+                                <input type="text" id="edit-name" name="name" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-modifier" class="form-label">Modifier:</label>
+                                <input type="number" id="edit-modifier" name="modifier" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-roll" class="form-label">Roll:</label>
+                                <input type="number" id="edit-roll" name="roll" class="form-control" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Update</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
 
         <!--Combatant Table-->
         <div class="container table-responsive">
@@ -26,6 +58,7 @@
                     <th class="combatantName">Combatant Name</th>
                     <th class="combatantMod">Modifier</th>
                     <th class="combatantRoll">Initiative Roll</th>
+                    <th class="update">Edit</th>
                     <th class="update">Remove</th>
 
                 </tr>
@@ -33,24 +66,21 @@
 
                 <tbody>
                     {% for combatant in combatants %}
-                        <tr>
+                        <tr class="combatant-entry">
                             <td>{{combatant.name}}</td>
                             <td>{{combatant.sign}}{{combatant.mod}}</td>
                             <td>{{combatant.roll}}</td>
-
-                            <td><form action="/delete/{{combatant.id}}" method="POST">
-                                <input type="hidden" name=id value="{{combatant.id}}">
-                                <button class="btn btn-outline-secondary btn-sm remove"	type="submit">
-                                    <i class="bi bi-trash" aria-hidden="true"></i>
-                                </button>
-                            </form></td>
+                            <td><button class="edit-button btn btn-outline-info btn-sm edit" data-combatant-id="{{combatant.id}}" data-bs-toggle="modal" data-bs-target="#edit-modal" type="button">
+                                <i class="bi bi-pencil" aria-hidden="true"></i></button></td>
+                            <td><button class="delete-button btn btn-outline-secondary btn-sm remove" data-combatant-id="{{combatant.id}}" type="button">
+                                <i class="bi bi-trash" aria-hidden="true"></i></button></td>
 
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
             <div class="row">
-                <form action="#" method="POST">
+                <form id="create-combatant-form" action="/create_combatant" method="POST">
                     <div>
                     <label for="name">Name of Combatant:</label>
                     <input type="text" id="name" name="name" required>
@@ -64,13 +94,14 @@
                     <label for="tiebreaker">Use tiebreaker rule?: </label>
                     <input type="checkbox" id="tiebreaker" name="tiebreaker" value="True" {{'checked' if tiebreaker else ''}}>
                     </div>
-                    <input type="submit" class="btn btn-success" value="Submit Combatant">
-                    <button type="reset" class="btn btn-warning" value="Reset">Clear Inputs</button>
+                    <input type="submit" class="btn btn-success" value="Create Combatant">
                 </form>
-                {{ errors }}
             </div>
 
         </div>
 
     </body>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </html>

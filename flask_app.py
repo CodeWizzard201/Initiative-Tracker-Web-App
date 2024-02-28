@@ -1,7 +1,7 @@
 # Initiative Tracker
 # By Gabe Williams
 
-from flask import Flask, redirect, render_template, request, url_for, session
+from flask import Flask, render_template, request, session, jsonify, redirect, url_for
 from processing import Combatant, make_combatant, sort_combatants
 
 app = Flask(__name__)
@@ -10,34 +10,11 @@ app.config["SECRET_KEY"] = "sdfueoqhwerhkfniperqjfdcnckalsfjfnn"
 
 session_tags = ["combatants", "descend", "tiebreaker"]
 
-@app.route('/', methods=["POST", "GET"])
+@app.route('/', methods=["GET"])
 def index():
     for tag in session_tags:
         if tag not in session:
             session[tag] = []
-
-    # errors: Holds error text for the page
-    errors = ""
-    if request.method == "POST":
-        try:
-            print(request.form["name"])
-            print(request.form["modifier"])
-            print(request.form["roll"])
-            if request.form["name"] is None or request.form["modifier"] is None or request.form["roll"] is None:
-                print("Raised")
-                raise Exception("One or more of the values is invalid.")
-
-            new_combatant = make_combatant(str(request.form["name"]), int(request.form["modifier"]), int(request.form["roll"]))
-            print(new_combatant)
-            session["combatants"].append(new_combatant.to_json())
-
-            session["descend"] = request.form.get("descend",False)
-            session["tiebreaker"] = request.form.get("tiebreaker", False)
-
-            session.modified = True
-        except:
-            print("Except Triggered")
-            errors += "Invalid inputs, please check your inputs for each section."
 
     combatants = session.get("combatants", [])
 
@@ -50,20 +27,79 @@ def index():
     #Converts back to json and the json combatant list
     combatants = [combatant.to_json() for combatant in original_combatants]
 
-    return render_template("index.html", errors=errors, combatants=combatants, descend=session.get("descend",False), tiebreaker=session.get("tiebreaker", False))
+    return render_template("index.html", combatants=combatants, descend=session.get("descend",False), tiebreaker=session.get("tiebreaker", False))
 
-#@app.route('/delete/<uuid>', method == ["POST"])
-#def delete(uuid):
-     # Find the index of the combatant to delete using its UUID
-    #index_to_delete = None
-    #for i, combatant_data in enumerate(combatants):
-       # if combatant_data['id'] == uuid:
-           # index_to_delete = i
-           # break
+@app.route('/get_combatant/<string:combatant_id>', methods=['GET'])
+def get_combatant(combatant_id):
+    for combatant in session["combatants"]:
+        if combatant['id'] == combatant_id:
+            combatant_data = combatant
+            break
 
-   # if index_to_delete is not None:
-      #  del combatants[index_to_delete]  # Delete the combatant from the list
-       # session['combatants'] = combatants  # Update the session
+    if not combatant_data:
+        return jsonify({'error': 'Combatant not found'}), 400
 
-    # Redirect to the main page or display a confirmation message
-  #  return redirect(url_for('index'))  # Example of redirection
+    return jsonify(combatant_data)
+
+@app.route('/create_combatant', methods = ['POST'])
+def create_combatant():
+    #errors: Holds error text for the page
+    errors = ""
+    try:
+        name = request.form.get("name")
+        modifier = request.form.get("modifier")
+        roll = request.form.get("roll")
+
+        if not all([name, modifier, roll]):
+            raise Exception("One or more of the values is invalid.")
+
+        new_combatant = make_combatant(name, modifier, roll)
+        session["combatants"].append(new_combatant.to_json())
+        session["descend"] = request.form.get("descend",False)
+        session["tiebreaker"] = request.form.get("tiebreaker", False)
+
+        session.modified = True
+        return jsonify({"success": True})
+    except Exception as e:
+        errors = str(e)
+        return jsonify({"success": False, "error": errors})
+
+@app.route('/update_combatant', methods = ["PUT"])
+def update_combatant():
+    combatant_id = request.json.get("id")
+    for combatant in session["combatants"]:
+        if combatant['id'] == combatant_id:
+            old_combatant = combatant
+            combatant['name'] = request.json.get("name")
+            combatant['mod'] = request.json.get("mod")
+            combatant['roll'] = request.json.get("roll")
+
+            # Delete the old combatant
+            session['combatants'].remove(old_combatant)
+
+            # Add the new version to the list
+            session['combatants'].append(combatant)
+
+            session.modified = True
+            break
+    if not session.modified:
+        return jsonify({'error': 'Combatant not found'}), 400
+
+    return jsonify({'success': 'Combatant updated'})
+
+@app.route('/delete_combatant', methods = ["POST"])
+def delete_combatant():
+    combatant_id = request.json.get("combatantID")
+    combatant_to_remove = None
+    for combatant in session["combatants"]:
+        if combatant['id'] == combatant_id:
+            combatant_to_remove = combatant
+            break
+
+    if combatant_to_remove:
+        session['combatants'].remove(combatant_to_remove)
+        session.modified = True
+        return jsonify({"success": True})
+
+    else:
+        return jsonify({"success": False, "error": "Invalid Combatant ID"}), 400
