@@ -1,12 +1,12 @@
 # Initiative Tracker
 # By Gabe Williams
 
-from flask import Flask, render_template, request, session, jsonify, redirect, url_for
+from flask import Flask, render_template, request, session, jsonify
 from processing import Combatant, make_combatant, sort_combatants
+from secret import config_settings
 
 app = Flask(__name__)
-app.config["DEBUG"] = True
-app.config["SECRET_KEY"] = "sdfueoqhwerhkfniperqjfdcnckalsfjfnn"
+app = config_settings(app)
 
 session_tags = ["combatants", "descend", "tiebreaker"]
 
