@@ -5,6 +5,7 @@ This is a Web Application version of my Initiative Tracker app that I made in Py
 
 <h3>To Use the App:</h3> 
 1). Go to the website! (https://redwizard.pythonanywhere.com/)
+<br><br>
 
 2). Enter in a "combatant" via the three boxes:
 <br>
