@@ -1,12 +1,28 @@
 const editButtons = document.querySelectorAll(".edit-button");
 const deleteButtons = document.querySelectorAll(".delete-button");
 const createCombatantForm = document.getElementById("create-combatant-form");
+const darkModeToggle = document.getElementById('dark-mode-toggle');
+const html = document.querySelector('html');
+
+(function(){ //Runs on script load
+    html.setAttribute('data-bs-theme', localStorage.getItem('theme'));
+})();
+
+function darkMode(){
+    //Checks current theme and gets the opposite one
+    var targetTheme = html.getAttribute('data-bs-theme') === 'dark' ? 'light' : 'dark';
+
+    html.setAttribute('data-bs-theme', targetTheme);
+
+    localStorage.setItem('theme', targetTheme);
+}
+
+darkModeToggle.addEventListener("click", darkMode);
 
 createCombatantForm.addEventListener("submit", (event) => {
     event.preventDefault();
 
     const formData = new FormData(createCombatantForm);
-    console.log(formData);
     fetch("/create_combatant", {
         method:"POST",
         body: formData
@@ -102,3 +118,5 @@ deleteButtons.forEach(button => {
         });
     });
 });
+
+

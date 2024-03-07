@@ -26,7 +26,6 @@ def index():
 
     #Converts back to json and the json combatant list
     combatants = [combatant.to_json() for combatant in original_combatants]
-
     return render_template("index.html", combatants=combatants, descend=session.get("descend",False), tiebreaker=session.get("tiebreaker", False))
 
 @app.route('/get_combatant/<string:combatant_id>', methods=['GET'])
